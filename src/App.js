@@ -33,20 +33,19 @@ function App() {
 
   return (
     <div className="App">
+      <NavbarX />
 
       {/* STYLING THE PAGE */}
       <div className='App-header'>
-        <NavbarX />
 
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/near_earth_objects" element={<EarthObjects />} />
         </Routes>
 
-        <Footer />
       </div>
 
-
+      <Footer />
     </div>
   );
 };
