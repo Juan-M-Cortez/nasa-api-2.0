@@ -9,7 +9,7 @@ const Footer = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
-
+  console.log('test');
   return (
     <div>
       <Navbar
