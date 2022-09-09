@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, NavItem, NavLink } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import Banner from './Banner/Banner';
@@ -7,18 +7,27 @@ import Dates from './Dates/Dates';
 import './Home.scss';
 
 const Home = (props) => {
-  const { imgURL, title, explanation } = props;
+  const [indexDay, setIndexDay] = useState(9)
+  const { imgURL, title, explanation, dates } = props;
+
   // 🗺️--allows us to navigate react router
   // through nested components within Routes--🗺️
   let navigate = useNavigate();
 
+  //---------clickHandle pick a date---------
+  const pickADate = (index) => {
+    setIndexDay(index);
+  }
+
+
   return (
     <section className='app__home'>
       <div className='app__home-banner'>
-        <Banner imgURL={imgURL[9]} title={title[9]} explanation={explanation[9]} />
+        <Banner imgURL={imgURL[indexDay]} title={title[indexDay]} explanation={explanation[indexDay]} />
+        <div className='extra'/>
       </div>
       <div className='app_home-topthree'>
-        <Dates />
+        <Dates dates={dates} pickADate={pickADate}/>
         <TopThree imgURL={imgURL} explanation={explanation} title={title} />
       </div>
     </section>

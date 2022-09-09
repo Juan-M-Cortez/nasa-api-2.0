@@ -98,7 +98,7 @@ const NavbarX = (props) => {
 
           </Nav>
 
-          <NavbarText>Simple Text</NavbarText>
+          <NavbarText>Nasa</NavbarText>
         </Collapse>
 
       </Navbar>

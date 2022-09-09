@@ -48,6 +48,8 @@ function dayFormat(today) {
   return day;
 }
 
+
+
 function App() {
   //  state will hold the api object
   const [apod, setApod] = useState({});
@@ -95,12 +97,13 @@ function App() {
   let imgURLs = [];
   let explanations = [];
   let titles = [];
+  let dates = [];
   if (apod[0]) {
     imgURLs = apod.map(obj => obj.url);
     explanations = apod.map(obj => obj.explanation);
     titles = apod.map(obj => obj.title);
+    dates = apod.map(obj => obj.date);
   }
-
 
   //---------testing case---------
   ++count;
@@ -123,6 +126,7 @@ function App() {
                 imgURL={imgURLs}
                 explanation={explanations} 
                 title={titles}
+                dates={dates}
                 />
             } />
           <Route path="/SpaceObjects" element={<SpaceObjects />} />
