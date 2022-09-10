@@ -1,142 +1,67 @@
-import axios from 'axios';
+import { About, Footer, Header, Skills, Testimonial, Work } from './container';
+import { Navbar, NavigationDots, Sidebar, SidebarCollision } from './Components';
 import React, { useState, useEffect } from 'react';
-import './App.css';
+import './App.scss';
+import MobileBar from './Components/MobileBar/MobileBar';
 
-import NavbarX from './components/Navbar/NavbarX';
-import Footer from './components/Footer/Footer';
-import Home from './container/Home/Home';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import SpaceObjects from './container/SpaceObjects/SpaceObjects';
-
-import { TenDayList, TodaysDate } from './utilities';
-
-const backgroundColor = {
-  bgColorNEO: 'rgb(74 56 60)',
-  bgColorH: '#282c34',
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
 }
 
-let count = 0;
-// ---------is the number less the 10, if true concatinate a 0---------
-function lessThenTen(num) {
-  return num < 10 ? '0' + num : num.toString();
-}
+const App = () => {
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
-// ---------splits & filters today state into month/day---------
-function monthFormat(today) {
-  let month =
-    today
-      .split('', 7)
-      .filter((num, index) => {
-        return index === 6 || index === 7;
-      })
-      .join();
-
-  month = lessThenTen(month);
-  return month;
-}
-
-function dayFormat(today) {
-  let day =
-    today
-      .split('')
-      .filter((num, index) => {
-        return index === 9 || index === 10;
-      })
-      .join()
-
-  day = lessThenTen(day);
-  return day;
-}
-
-
-
-function App() {
-  //  state will hold the api object
-  const [apod, setApod] = useState({});
-  // state will hold todays date
-  const [today, setTodaty] = useState(TodaysDate())
-  // will hold the top 3 img votes
-  const [topPic, setTopPic] = useState({ pic1: 0, pic2: 0, pic3: 0 });
-
-  //---------current date---------
-  const mm = monthFormat(today);
-  const dd = dayFormat(today);
-  let yyyy = today.split('', 4).join('');
-  // + concatenation + 
-  let currentDate = yyyy + '-' + mm + '-' + dd;
-
-  //---------10 days ago date---------
-  // returns an {object} that holds the last 10 days 
-  let tenDaysAgo = TenDayList(mm, dd);
-  tenDaysAgo.month = lessThenTen(tenDaysAgo.month);
-  tenDaysAgo.day = lessThenTen(tenDaysAgo.day);
-  // + concatenation + 
-  let lastTenDate = yyyy + '-' + tenDaysAgo.month + '-' + tenDaysAgo.day;
-
-  // Apod URL 
-  const URL = `https://api.nasa.gov/planetary/apod?start_date=${lastTenDate}&end_date=${currentDate}&api_key=AgviLJFwUuAOU5MIUkxa0OCdj6bpCnRWwDOA4WsO`
-
-  // grabing the current location of the subdomain
-  const location = useLocation();
-
-  const envColor = (location) => {
-    let bgColor = (location === '/SpaceObjects' ?
-      backgroundColor.bgColorNEO :
-      backgroundColor.bgColorH);
-    return bgColor;
-  }
 
   useEffect(() => {
-    axios.get(URL)
-      .then(obj => {
-        setApod(obj.data)
-      })
-  }, [URL])
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
 
-  //---------sending to home---------
-  let imgURLs = [];
-  let explanations = [];
-  let titles = [];
-  let dates = [];
-  if (apod[0]) {
-    imgURLs = apod.map(obj => obj.url);
-    explanations = apod.map(obj => obj.explanation);
-    titles = apod.map(obj => obj.title);
-    dates = apod.map(obj => obj.date);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  console.log(windowDimensions.width);
+
+  /*------------------Desktop View | Tablet------------------*/
+  if (windowDimensions.width > 900) {
+    return (
+      <div className='appbar'>
+       <p>Hello Change</p>
+        <Navbar />
+        <Sidebar />
+        <SidebarCollision />
+        <div className='app'>
+          <Header />
+          <About />
+          <Work />
+          <Skills />
+          <Testimonial />
+          <Footer />
+        </div>
+      </div>
+    );
+  }
+  /*------------------Mobile View------------------*/
+  else {
+    return (
+      <div className='app'>
+        <Navbar />
+        <MobileBar />
+        <About />
+        <Work />
+        <Skills />
+        <Testimonial />
+        <Footer />
+      </div>
+    );
   }
 
-  //---------testing case---------
-  ++count;
-  console.log(count);
 
-  return (
-    <div className="App">
-      <NavbarX location={location} />
-
-      {/* STYLING THE PAGE */}
-
-      <div className='App-header' style={{ backgroundColor: envColor(location.pathname) }}>
-
-        <Routes>
-          <Route
-            path="/"
-            exact={true}
-            element={
-              <Home
-                imgURL={imgURLs}
-                explanation={explanations} 
-                title={titles}
-                dates={dates}
-                />
-            } />
-          <Route path="/SpaceObjects" element={<SpaceObjects />} />
-        </Routes>
-
-      </div>
-
-      <Footer />
-    </div>
-  );
-};
+}
 
 export default App;
